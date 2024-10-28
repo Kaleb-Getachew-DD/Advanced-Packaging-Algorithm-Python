@@ -201,12 +201,7 @@ If you would like to contribute to this project, please create a new branch and 
 
 ## License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-.py
-```
-
-## Contributing
-
+This project is open source and available under the MIT License.
 If you would like to contribute to this project, please create a new branch and submit a pull request. We welcome all contributions!
 
 ## License
