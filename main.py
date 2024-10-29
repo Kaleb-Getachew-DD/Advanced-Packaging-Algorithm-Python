@@ -1,3 +1,5 @@
+import random
+
 class Product:
     def __init__(self, name, price, style, material, color_palette, quality):
         self.name = name
@@ -108,18 +110,19 @@ def calculate_package_score(package, user_preferences):
 
 def generate_package(available_products, essential_items, remaining_budget):
     selected_package = []
-    used_products = set()  # Keep track of used products in this package
+    used_products = set()
 
-    for essential in essential_items:
-        best_product = None
-        max_matches = 0
+    # Randomize the order of essential items
+    shuffled_essentials = essential_items.copy()
+    random.shuffle(shuffled_essentials)
+
+    for essential in shuffled_essentials:
+        matching_products = []
 
         for product in available_products:
             # Check if product matches the essential item
             if product.name == essential and product.name not in all_used_products:
                 matches = 0
-
-                # Increment match count for each criteria
                 if product.style == user_preferences["style"]:
                     matches += 1
                 if product.material in user_preferences["material"].split(", "):
@@ -128,28 +131,37 @@ def generate_package(available_products, essential_items, remaining_budget):
                     matches += 1
                 if product.quality == user_preferences["quality"]:
                     matches += 1
+                
+                matching_products.append((product, matches))
 
-                # Check if this product has more matches
-                if matches > max_matches:
-                    max_matches = matches
-                    best_product = product
+        # Randomly select from products that have the highest match score
+        if matching_products:
+            max_matches = max(matches for _, matches in matching_products)
+            best_products = [p for p, m in matching_products if m == max_matches]
+            best_product = random.choice(best_products)
 
-        # If a best product was found and it fits in the budget
-        if best_product and best_product.price <= remaining_budget:
-            selected_package.append(best_product)
-            remaining_budget -= best_product.price
-            used_products.add(best_product.name)
-            all_used_products.add(best_product.name)  # Add to global used products
-            # Remove the product from available products to avoid re-selection
-            available_products.remove(best_product)
+            if best_product.price <= remaining_budget:
+                selected_package.append(best_product)
+                remaining_budget -= best_product.price
+                used_products.add(best_product.name)
+                all_used_products.add(best_product.name)
+                available_products.remove(best_product)
 
-    # Add additional products if there's remaining budget
-    for product in available_products:
-        if remaining_budget >= product.price and product.name not in used_products and product.name not in all_used_products:
+    # Randomize additional products selection
+    remaining_products = [p for p in available_products 
+                            if p.price <= remaining_budget 
+                            and p.name not in used_products 
+                            and p.name not in all_used_products]
+    
+    # Shuffle the remaining products
+    random.shuffle(remaining_products)
+
+    for product in remaining_products:
+        if remaining_budget >= product.price:
             selected_package.append(product)
             remaining_budget -= product.price
             used_products.add(product.name)
-            all_used_products.add(product.name)  # Add to global used products
+            all_used_products.add(product.name)
 
     return selected_package, remaining_budget
 
