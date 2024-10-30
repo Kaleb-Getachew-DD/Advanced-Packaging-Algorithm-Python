@@ -1,4 +1,5 @@
 import random
+import time
 
 class Product:
     def __init__(self, name, price, style, material, color_palette, quality):
@@ -165,15 +166,24 @@ def generate_package(available_products, essential_items, remaining_budget):
 
     return selected_package, remaining_budget
 
-# Generate up to max_packages
-while len(packages) < max_packages:
-    remaining_budget = budget
-    new_package, remaining_budget = generate_package(available_products.copy(), essential_items, remaining_budget)
+def generate_all_packages(budget, essential_items, max_packages, available_products, user_preferences):
+    packages = []
+    all_used_products.clear()  # Reset the global set
     
-    if not new_package:
-        break  # Stop if no new package can be generated
+    while len(packages) < max_packages:
+        random.seed(time.time())
+        remaining_budget = budget
+        new_package, remaining_budget = generate_package(available_products.copy(), essential_items, remaining_budget)
+        
+        if not new_package:
+            break
+            
+        packages.append(new_package)
+    
+    return packages
 
-    packages.append(new_package)
+# Generate up to max_packages
+packages = generate_all_packages(budget, essential_items, max_packages, available_products, user_preferences)
 
 # Modify the final output section to help debug
 for idx, package in enumerate(packages):
