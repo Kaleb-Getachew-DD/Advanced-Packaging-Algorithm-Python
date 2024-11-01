@@ -184,18 +184,18 @@ def generate_all_packages(budget, essential_items, max_packages, available_produ
 
 # Generate up to max_packages
 packages = generate_all_packages(budget, essential_items, max_packages, available_products, user_preferences)
-
+if __name__ == "__main__":
 # Modify the final output section to help debug
-for idx, package in enumerate(packages):
-    print(f"=== Package {idx + 1} ===")
-    total_price = 0
-    for item in package:
-        print(f"Item: {item.name}, Price: ${item.price}")
-        total_price += item.price
-    score = calculate_package_score(package, user_preferences)
-    print(f"Total Price: ${total_price}")
-    print(f"Package similarity Score: {score:.2f}%") 
-    print(f"Remaining Budget: ${budget - total_price}\n")
+    for idx, package in enumerate(packages):
+        print(f"=== Package {idx + 1} ===")
+        total_price = 0
+        for item in package:
+            print(f"Item: {item.name}, Price: ${item.price}")
+            total_price += item.price
+        score = calculate_package_score(package, user_preferences)
+        print(f"Total Price: ${total_price}")
+        print(f"Package similarity Score: {score:.2f}%") 
+        print(f"Remaining Budget: ${budget - total_price}\n")
 
-# Print a summary of packages generated
-print(f"Total Packages Generated: {len(packages)}")
+        # Print a summary of packages generated
+    print(f"Total Packages Generated: {len(packages)}")
